@@ -14,6 +14,15 @@ class UserController extends ApiController {
 
   async addUser(Request) {
     const { RequestData } = Request;
+    const result = await DB.find('users', 'first', {
+      conditions: {
+        phone: RequestData.phone,
+        status: 0
+      },
+    });
+    if (result) {
+      RequestData.id = result.id;
+    }
     await DB.save('users', RequestData);
     RequestData.lang = Request.lang;
     setTimeout(() => {
