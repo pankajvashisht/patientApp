@@ -31,6 +31,31 @@ module.exports = {
 			data: app.addUrl(result, 'licenses_image')
 		};
 	},
+	getAngency: async (Request) => {
+		let offset = Request.params.offset || 1;
+		const limit = Request.query.limit || 10;
+		const search = Request.query.search || '';
+		offset = (offset - 1) * limit;
+		const condition = {
+			conditions: {
+				status: 1
+			},
+			limit: [ offset, limit ],
+			orderBy: [ 'id desc' ]
+		};
+		if (search) {
+			condition.conditions[`like`] = {
+				name: search,
+				location: search,
+				phone: search
+			};
+		}
+		const result = await DB.find('agencies', 'all', condition);
+		return {
+			message: 'agencies list',
+			data: app.addUrl(result, 'image')
+		};
+	},
 	addLicenses: async (Request) => {
 		const required = {
 			user_id: Request.body.user_id,

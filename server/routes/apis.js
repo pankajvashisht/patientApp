@@ -19,6 +19,7 @@ router.post('/change_password', Apiresponse(user.changePassword));
 router.post('/forgot-password', Apiresponse(user.forgotPassword));
 router.post('/logout', Apiresponse(user.logout));
 router.get('/app-information', Apiresponse(user.appInfo));
+router.get('/agencie/:offset([0-9]+)?/', Apiresponse(LicensesController.getAngency));
 router
 	.route('/licenses/:offset([0-9]+)?/')
 	.get(Apiresponse(LicensesController.getLicense))
