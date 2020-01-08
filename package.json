@@ -12,6 +12,8 @@
     "watch": "nodemon server/bin/www"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^16.0.0",
+    "@ckeditor/ckeditor5-react": "^2.0.0",
     "availity-reactstrap-validation": "^2.0.4",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
@@ -81,5 +83,17 @@
     "twilio": "^3.39.1",
     "video.js": "^7.6.0",
     "yup": "^0.27.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

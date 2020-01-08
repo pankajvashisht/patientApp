@@ -47,10 +47,10 @@ class adminController extends ApiController {
 		let offset = req.params.offset || 1;
 		const limit = req.params.limit || 20;
 		offset = (offset - 1) * limit;
-		let conditions = 'where user_type = 1';
+		let conditions = '';
 		if (req.query.q && req.query.q !== 'undefined') {
 			const { q } = req.query;
-			conditions += ` and name like '%${q}%' or email like '%${q}%' or phone like '%${q}%'`;
+			conditions += ` where name like '%${q}%' or email like '%${q}%' or phone like '%${q}%'`;
 		}
 		const query = `select * from users ${conditions} order by id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from users ${conditions}`;
@@ -61,74 +61,20 @@ class adminController extends ApiController {
 		return result;
 	}
 
-	async allShops(req) {
+	async allAgency(req) {
 		let offset = req.params.offset || 1;
 		const limit = req.params.limit || 20;
 		offset = (offset - 1) * limit;
-		let conditions = 'where user_type = 2';
+		let conditions = '';
 		if (req.query.q && req.query.q !== 'undefined') {
 			const { q } = req.query;
-			conditions += ` and name like '%${q}%' or email like '%${q}%' or phone like '%${q}%'`;
+			conditions += ` where name like '%${q}%' or location like '%${q}%' or phone like '%${q}%'`;
 		}
-		const query = `select * from users ${conditions} order by id desc limit ${offset}, ${limit}`;
-		const total = `select count(*) as total from users ${conditions}`;
-		const result = {
-			pagination: await super.Paginations(total, offset, limit),
-			result: app.addUrl(await DB.first(query), [ 'profile', 'licence' ])
-		};
-		return result;
-	}
-
-	async allDrivers(req) {
-		let offset = req.params.offset || 1;
-		const limit = req.params.limit || 20;
-		offset = (offset - 1) * limit;
-		let conditions = 'where user_type = 3';
-		if (req.query.q && req.query.q !== 'undefined') {
-			const { q } = req.query;
-			conditions += ` and name like '%${q}%' or email like '%${q}%' or phone like '%${q}%'`;
-		}
-		const query = `select * from users ${conditions} order by id desc limit ${offset}, ${limit}`;
-		const total = `select count(*) as total from users ${conditions}`;
-		const result = {
-			pagination: await super.Paginations(total, offset, limit),
-			result: app.addUrl(await DB.first(query), [ 'profile', 'licence' ])
-		};
-		return result;
-	}
-
-	async getProducts(Request) {
-		let offset = Request.params.offset || 1;
-		const limit = Request.params.limit || 20;
-		const orderStatus = Request.query.order_status || 1;
-		const shop_id = Request.query.shop_id || 0;
-		offset = (offset - 1) * limit;
-		let conditions = `where user_id = ${shop_id} `;
-		if (Request.query.q && Request.query.q !== 'undefined') {
-			const { q } = Request.query;
-			conditions += `and  name like '%${q}%' or flavour like '%${q}%'`;
-		}
-		const query = `select * from products ${conditions} order by id desc limit ${offset}, ${limit}`;
-		const total = `select count(*) as total from products ${conditions}`;
+		const query = `select * from agencies ${conditions} order by id desc limit ${offset}, ${limit}`;
+		const total = `select count(*) as total from agencies ${conditions}`;
 		const result = {
 			pagination: await super.Paginations(total, offset, limit),
 			result: app.addUrl(await DB.first(query), 'image')
-		};
-		return result;
-	}
-
-	async getOrders(Request) {
-		let offset = Request.params.offset || 1;
-		const limit = Request.params.limit || 20;
-		const orderStatus = Request.query.order_status || 2;
-		offset = (offset - 1) * limit;
-		let conditions = `where order_status = ${orderStatus}`;
-
-		const query = `select * from orders ${conditions} order by id desc limit ${offset}, ${limit}`;
-		const total = `select count(*) as total from orders ${conditions}`;
-		const result = {
-			pagination: await super.Paginations(total, offset, limit),
-			result: await DB.first(query)
 		};
 		return result;
 	}
@@ -160,10 +106,6 @@ class adminController extends ApiController {
 		if (Request.files && Request.files.profile) {
 			body.profile = await app.upload_pic_with_await(Request.files.profile);
 		}
-		delete body.licence;
-		if (Request.files && Request.files.licence) {
-			body.licence = await app.upload_pic_with_await(Request.files.licence);
-		}
 		return await DB.save('users', body);
 	}
 
@@ -184,6 +126,16 @@ class adminController extends ApiController {
 			admin_info[0].profile = app.ImageUrl(admin_info[0].profile);
 		}
 		return admin_info[0];
+	}
+
+	async addAgency(Request) {
+		const { body } = Request;
+
+		delete body.image;
+		if (Request.files && Request.files.image) {
+			body.image = await app.upload_pic_with_await(Request.files.image);
+		}
+		return await DB.save('agencies', body);
 	}
 
 	async updateData(req) {
@@ -219,15 +171,11 @@ class adminController extends ApiController {
 	}
 
 	async dashboard() {
-		const users = await DB.first('select count(*) as total from users where user_type = 1');
-		const shops = await DB.first('select count(id) as total from users where user_type = 2');
-		const drivers = await DB.first('select count(id) as total from users where user_type = 3');
-		const orders = await DB.first('select count(id) as total from orders where order_status =1');
+		const users = await DB.first('select count(id) as total from users');
+		const agency = await DB.first('select count(id) as total from agencies');
 		return {
-			total_shops: shops[0].total,
-			total_users: users[0].total,
-			total_drivers: drivers[0].total,
-			total_orders: orders[0].total
+			total_agency: agency[0].total,
+			total_users: users[0].total
 		};
 	}
 
