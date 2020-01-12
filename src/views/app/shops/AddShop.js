@@ -2,7 +2,7 @@ import React, { Fragment, useState, useReducer } from 'react';
 import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
 import { Row, Card, CardBody, Input, CardTitle, FormGroup, Label, Button, Form } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
-import { addAgency } from '../../../Apis/admin';
+import { addAgency, getLatLong } from '../../../Apis/admin';
 import Autocomplete from 'react-google-autocomplete';
 import { initialState } from './Constants';
 import { NotificationManager } from '../../../components/common/react-notifications';
@@ -18,6 +18,15 @@ const AddShop = React.memo(() => {
 	};
 	const location = (place) => {
 		dispatch({ key: 'address', value: place.formatted_address });
+		getLatLong(place.formatted_address).then(res => { 
+			const { data } = res;
+			const latitude = data.results[0].geometry.location;
+			dispatch({ key: 'latitude', value: latitude.latitude });
+			dispatch({ key: 'longitude', value: latitude.longitude });
+			console.log(res);
+		}).catch(err => { 
+			console.log(err);
+		});
 	};
 	const [ shopForm, dispatch ] = useReducer(reducer, initialState);
 	const [ loading, setIsLoading ] = useState(false);

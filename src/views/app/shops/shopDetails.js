@@ -38,10 +38,10 @@ const ShopDetails = (props) => {
 									<div className="position-absolute card-top-buttons" />
 									<SingleLightbox
 										thumb={
-											shopDetails.profile ? shopDetails.profile : '/assets/img/profile-pic.jpg'
+											shopDetails.image ? shopDetails.image : '/assets/img/profile-pic.jpg'
 										}
 										large={
-											shopDetails.profile ? shopDetails.profile : '/assets/img/profile-pic.jpg'
+											shopDetails.image ? shopDetails.image : '/assets/img/profile-pic.jpg'
 										}
 										className="card-img-top"
 									/>

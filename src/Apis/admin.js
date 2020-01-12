@@ -64,6 +64,10 @@ export const updateProfile = (data) => {
 	return axios.post(`/admin-profile`, form);
 };
 
+export const getLatLong = location => { 
+	return axios.get(`https://maps.google.com/maps/api/geocode/json?key=AIzaSyC5-nBPRTKoIFzoVXfALW-oPnBlCLQTTIY&address=${location}&sensor=false`)
+}
+
 export const updateUser = (data) => {
 	return axios.put(`/users?`, {
 		table: data.table,
