@@ -1,5 +1,5 @@
 import axios from '../utils/handleAxios';
-
+import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
 export const Adminlogin = ({ email, password }) => {
 	return axios.post(`/login`, {
 		email,
@@ -64,8 +64,12 @@ export const updateProfile = (data) => {
 	return axios.post(`/admin-profile`, form);
 };
 
-export const getLatLong = location => { 
-	return axios.get(`https://maps.google.com/maps/api/geocode/json?key=AIzaSyC5-nBPRTKoIFzoVXfALW-oPnBlCLQTTIY&address=${location}&sensor=false`)
+export const getLatLong = async location => { 
+	const[geocode] = await geocodeByAddress(location);
+  const latLng = await getLatLng(geocode);
+  return {
+    ...latLng,
+  };
 }
 
 export const updateUser = (data) => {

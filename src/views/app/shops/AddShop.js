@@ -16,17 +16,11 @@ const AddShop = React.memo(() => {
 				throw new Error('Unexpected action');
 		}
 	};
-	const location = (place) => {
+	const location = async (place) => {
 		dispatch({ key: 'address', value: place.formatted_address });
-		getLatLong(place.formatted_address).then(res => { 
-			const { data } = res;
-			const latitude = data.results[0].geometry.location;
-			dispatch({ key: 'latitude', value: latitude.latitude });
-			dispatch({ key: 'longitude', value: latitude.longitude });
-			console.log(res);
-		}).catch(err => { 
-			console.log(err);
-		});
+		const lat = await getLatLong(place.formatted_address);
+		dispatch({ key: 'latitude', value: lat.lat });
+		dispatch({ key: 'longitude', value: lat.lng });
 	};
 	const [ shopForm, dispatch ] = useReducer(reducer, initialState);
 	const [ loading, setIsLoading ] = useState(false);
@@ -105,6 +99,7 @@ const AddShop = React.memo(() => {
 											<Label for="exampleAddressGrid">Location</Label>
 											<Autocomplete
 												required={true}
+												placeholder={`Location`}
 												className="form-control"
 												style={{ width: '100%' }}
 												onPlaceSelected={(place) => {
