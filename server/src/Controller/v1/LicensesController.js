@@ -107,7 +107,6 @@ module.exports = {
 			orderBy: [ 'ratings.id desc' ]
 		};
 		const result = await DB.find('ratings', 'all', condition);
-		if (result.length === 0) throw new ApiError('Invaild Agency Id', 400);
 		return {
 			message: 'rating list',
 			data: app.addUrl(result, [ 'image', 'profile' ])
