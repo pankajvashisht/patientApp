@@ -40,6 +40,7 @@ module.exports = {
 			conditions: {
 				status: 1
 			},
+			fields: [ 'agencies.*', '(select avg(rating) from ratings where agency_id=agencies.id)' ],
 			limit: [ offset, limit ],
 			orderBy: [ 'id desc' ]
 		};
@@ -64,7 +65,7 @@ module.exports = {
 			agency_id: Request.body.agency_id
 		};
 		const RequestData = await apis.vaildation(required, {});
-		if (Request.rating > 5 || Request.rating < 1) {
+		if (RequestData.rating > 5 || RequestData.rating < 1) {
 			throw new ApiError('Rating should be more then 1 or less then 5', 422);
 		}
 		const agency = await DB.find('agencies', 'first', {
@@ -91,9 +92,9 @@ module.exports = {
 			join: [ 'users on (users.id = ratings.user_id)', 'agencies on (agencies.id = ratings.agency_id)' ],
 			fields: [
 				'ratings.*',
-				'users.name',
-				'users.email',
-				'users.phone',
+				'users.name as user_name',
+				'users.email as user_email',
+				'users.phone as user_phone',
 				'users.profile',
 				'agencies.phone as agency_phone',
 				'agencies.name as agency_name',
