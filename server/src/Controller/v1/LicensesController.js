@@ -40,7 +40,10 @@ module.exports = {
 			conditions: {
 				status: 1
 			},
-			fields: [ 'agencies.*', '(select avg(rating) from ratings where agency_id=agencies.id)' ],
+			fields: [
+				'agencies.*',
+				'IFNULL(ROUND((select avg(rating) from ratings where agency_id=agencies.id),0),0) as rating'
+			],
 			limit: [ offset, limit ],
 			orderBy: [ 'id desc' ]
 		};
