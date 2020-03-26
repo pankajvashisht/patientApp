@@ -109,7 +109,7 @@ const AddShop = React.memo(() => {
 										</FormGroup>
 									</Colxx>
 
-									<Colxx sm={12}>
+									<Colxx sm={6}>
 										<FormGroup>
 											<Label for="examplePasswordGrid">Profile</Label>
 											<Input
@@ -118,6 +118,18 @@ const AddShop = React.memo(() => {
 												onChange={({ target }) => handleInput('profile', target.files[0])}
 												name="profile"
 												placeholder=""
+											/>
+										</FormGroup>
+									</Colxx>
+									<Colxx sm={6}>
+										<FormGroup>
+											<Label for="examplePasswordGrid">Email</Label>
+											<Input
+												type="email"
+												required={true}
+												onChange={({ target }) => handleInput('email', target.value)}
+												name="email"
+												placeholder="Email"
 											/>
 										</FormGroup>
 									</Colxx>

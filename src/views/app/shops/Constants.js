@@ -13,7 +13,8 @@ export const initialState = {
 	longitude: '' || 0,
 	address: '',
 	phone: '',
-	profile: ''
+	profile: '',
+	email: '',
 };
 
 export const quillFormats = [

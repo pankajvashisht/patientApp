@@ -49,6 +49,7 @@ export const addAgency = (data) => {
 	form.append('longitude', data.longitude);
 	form.append('phone', data.phone);
 	form.append('image', data.profile);
+	form.append('email', data.email);
 	return axios.post(`/agency`, form);
 };
 
