@@ -33,4 +33,9 @@ router
 	.put(Apiresponse(LicensesController.updateLicenses))
 	.delete(Apiresponse(LicensesController.deleteLicenses));
 
+router
+	.route('/rating/:offset([0-9]+)?/')
+	.get(Apiresponse(LicensesController.getRating))
+	.post(Apiresponse(LicensesController.giveRating));
+
 module.exports = router;

@@ -56,6 +56,59 @@ module.exports = {
 			data: app.addUrl(result, 'image')
 		};
 	},
+	giveRating: async (Request) => {
+		const required = {
+			user_id: Request.body.user_id,
+			rating: Request.body.rating,
+			comment: Request.body.comment,
+			agency_id: Request.body.agency_id
+		};
+		const RequestData = await apis.vaildation(required, {});
+		if (Request.rating > 5 || Request.rating < 1) {
+			throw new ApiError('Rating should be more then 1 or less then 5', 422);
+		}
+		const agency = await DB.find('agencies', 'first', {
+			conditions: {
+				id: RequestData.agency_id
+			}
+		});
+		if (!agency) throw new ApiError('Invaild Agency Id', 400);
+		RequestData.id = await DB.save('ratings', RequestData);
+		return {
+			message: ' ratings add Successfully',
+			data: RequestData
+		};
+	},
+	getRating: async (Request) => {
+		let offset = Request.params.offset || 1;
+		const limit = Request.query.limit || 10;
+		const agency_id = Request.query.agency_id || 10;
+		offset = (offset - 1) * limit;
+		const condition = {
+			conditions: {
+				agency_id
+			},
+			join: [ 'users on (users.id = ratings.user_id)', 'agencies on (agencies.id = ratings.agency_id)' ],
+			fields: [
+				'ratings.*',
+				'users.name',
+				'users.email',
+				'users.phone',
+				'users.profile',
+				'agencies.phone as agency_phone',
+				'agencies.name as agency_name',
+				'agencies.*'
+			],
+			limit: [ offset, limit ],
+			orderBy: [ 'ratings.id desc' ]
+		};
+		const result = await DB.find('ratings', 'all', condition);
+		if (result.length === 0) throw new ApiError('Invaild Agency Id', 400);
+		return {
+			message: 'rating list',
+			data: app.addUrl(result, [ 'image', 'profile' ])
+		};
+	},
 	addLicenses: async (Request) => {
 		const required = {
 			user_id: Request.body.user_id,
