@@ -72,6 +72,10 @@ const ShopDetails = (props) => {
 											<div>
 												<b> Address </b> : {shopDetails.location}
 											</div>
+											<hr/> 
+											<div>
+												<b> Email </b> : {shopDetails.email}
+											</div>
 											<hr />
 											<div>
 												<b> Status </b> :{' '}

@@ -118,6 +118,7 @@ const Shops = React.memo((props) => {
 									>
 										<p className="list-item-heading mb-1 truncate">{post.name}</p>
 									</NavLink>
+									<p className="mb-1 text-muted text-small w-15 w-sm-100">{post.email}</p>
 									<p className="mb-1 text-muted text-small w-15 w-sm-100">{post.phone}</p>
 									<p className="mb-1 text-muted text-small w-15 w-sm-100">
 										{convertDate(post.created)}
