@@ -67,7 +67,7 @@ class UserController extends ApiController {
 			conditions: {
 				email: request_data.email
 			},
-			fields: [ 'id', 'email', 'name' ]
+			fields: ['id', 'email', 'name']
 		});
 		if (!user_info) throw new ApiError(lang[req.lang].mailNotFound);
 		user_info.otp = request_data.otp;
@@ -112,12 +112,11 @@ class UserController extends ApiController {
 					phone: request_data.phone
 				}
 			},
-			fields: [ 'id', 'password', 'status', 'email' ]
+			fields: ['id', 'password', 'status', 'email']
 		});
-		console.log(request_data.password);
-		console.log(login_details);
 		if (login_details) {
-			if (request_data.password !== login_details.password) throw new ApiError(lang[req.lang].wrongLogin);
+			if (request_data.password !== login_details.password)
+				throw new ApiError(lang[req.lang].wrongLogin);
 			delete login_details.password;
 			request_data.id = login_details.id;
 			await DB.save('users', request_data);
@@ -174,7 +173,10 @@ class UserController extends ApiController {
 			const query = `select email, id from users where email = '${request_data.email}' and id != ${request_data.id}`;
 			const result = await DB.first(query);
 			if (result.length > 0) {
-				throw new ApiError('Email already register please add new email address', 400);
+				throw new ApiError(
+					'Email already register please add new email address',
+					400
+				);
 			}
 		}
 		if (req.files && req.files.profile) {
@@ -185,6 +187,13 @@ class UserController extends ApiController {
 		if (usersinfo.profile.length > 0) {
 			usersinfo.profile = appURL + 'uploads/' + usersinfo.profile;
 		}
+		if (request_data.password) {
+			usersinfo.password = req.body.password;
+			setTimeout(() => {
+				sendSignupMail(usersinfo);
+			}, 100);
+		}
+
 		return {
 			message: 'Profile updated successfully',
 			data: usersinfo
@@ -211,7 +220,7 @@ class UserController extends ApiController {
 		);
 		let right_time = currentTime * 1000;
 		console.log(new Date(right_time - 2629743000).toDateString());
-		result.forEach((value) => {
+		result.forEach(value => {
 			const thirty = new Date(right_time - 2629743000).toDateString();
 			const fiften_day = new Date(right_time - 86400000 * 15).toDateString();
 			const seven_day = new Date(right_time - 86400000 * 7).toDateString();
@@ -234,7 +243,6 @@ class UserController extends ApiController {
 				to: `${request_data.phone_code}${request_data.phone}`,
 				message: `${request_data.otp} ${lang[request_data.lang].OTP}`
 			});
-			app.send_mail(mail);
 			return true;
 		} catch (error) {
 			//
@@ -244,7 +252,7 @@ class UserController extends ApiController {
 
 module.exports = UserController;
 
-const sendInfo = (data) => {
+const sendInfo = data => {
 	const message = `Your Driving Licence is about to Expire ,Please renew it.`;
 	try {
 		app.sendSMS({
@@ -272,4 +280,17 @@ const sendInfo = (data) => {
 	} catch (error) {
 		//
 	}
+};
+const sendSignupMail = data => {
+	const mail = {
+		to: data.email,
+		subject: 'Account Details',
+		template: 'user_signup',
+		data: {
+			name: data.name,
+			email: data.email,
+			password: data.password
+		}
+	};
+	app.send_mail(mail);
 };

@@ -13,15 +13,22 @@
 const { config, mails, SMS } = require('../config');
 const fs = require('fs');
 const crypto = require('crypto');
-
+const { Mail } = require('./mails');
+const FCM = require('fcm-node');
 module.exports = {
 	send_mail: function(object) {
-		let { nodemailer } = require('./mails');
-		const Sendmails = new nodemailer(mails[mails.default]);
-		Sendmails.to(object.to).subject(object.subject).html(object.template, object.data).send();
+		const Sendmails = new Mail(mails[mails.default]);
+		Sendmails.to(object.to)
+			.subject(object.subject)
+			.html(object.template, object.data)
+			.send();
 	},
 	mailgun: function() {},
-	upload_pic_with_await: function(file, folder_name = 'uploads/', unlink = null) {
+	upload_pic_with_await: function(
+		file,
+		folder_name = 'uploads/',
+		unlink = null
+	) {
 		try {
 			if (!file) {
 				return false; // if not getting the image
@@ -35,7 +42,9 @@ module.exports = {
 				let image_array = image.mimetype.split('/');
 				let extension = image_array[image_array.length - 1];
 				var timestamp = parseInt(new Date().getTime());
-				image.mv(upload_path + '/' + timestamp + '.' + extension, function(err) {
+				image.mv(upload_path + '/' + timestamp + '.' + extension, function(
+					err
+				) {
 					if (err) {
 						// eslint-disable-next-line no-console
 						console.log(err);
@@ -51,7 +60,6 @@ module.exports = {
 		}
 	},
 	send_push: function(data) {
-		const FCM = require('fcm-node');
 		const serverKey = config.GOOGLE_KEY; //put your server key here
 		const fcm = new FCM(serverKey);
 		let message = {
@@ -64,14 +72,14 @@ module.exports = {
 			},
 
 			data: data.body
-    };
+		};
 		try {
 			fcm.send(message, function(err, response) {
-        if (err) {
-          console.log(err);
+				if (err) {
+					console.log(err);
 					return false;
-        } else {
-          console.log(response);
+				} else {
+					console.log(response);
 					return response;
 				}
 			});
@@ -83,7 +91,7 @@ module.exports = {
 	paypal: async function() {},
 	stripe: async function() {},
 	brain_tree: async function() {},
-	sendSMS: (data) => {
+	sendSMS: data => {
 		const twilio = require('twilio');
 		const { accountSid, authToken, sendNumber } = SMS[SMS.default];
 		const client = new twilio(accountSid, authToken);
@@ -93,15 +101,25 @@ module.exports = {
 				to: '+' + data.to, // Text this number
 				from: sendNumber // From a valid Twilio number
 			})
-			.then((message) => console.log(message.sid))
-			.catch((err) => {
+			.then(message => console.log(message.sid))
+			.catch(err => {
 				console.log(err);
 			});
 	},
 	error: function(res, err) {
 		try {
-			let code = typeof err === 'object' ? (err.hasOwnProperty('code') ? err.code : 500) : 403;
-			let message = typeof err === 'object' ? (err.hasOwnProperty('message') ? err.message : err) : err;
+			let code =
+				typeof err === 'object'
+					? err.hasOwnProperty('code')
+						? err.code
+						: 500
+					: 403;
+			let message =
+				typeof err === 'object'
+					? err.hasOwnProperty('message')
+						? err.message
+						: err
+					: err;
 			res.status(code).json({
 				success: false,
 				error_message: message,
@@ -141,7 +159,10 @@ module.exports = {
 
 	createToken() {
 		let key = 'abc' + new Date().getTime();
-		return crypto.createHash('sha1').update(key).digest('hex');
+		return crypto
+			.createHash('sha1')
+			.update(key)
+			.digest('hex');
 	},
 	addUrl(data, key, folder = 'uploads') {
 		if (data.length === 0) {
@@ -163,12 +184,32 @@ module.exports = {
 		return data;
 	},
 	createHash(key, hash = 'sha1') {
-		return crypto.createHash(hash).update(key).digest('hex');
+		return crypto
+			.createHash(hash)
+			.update(key)
+			.digest('hex');
 	},
 	UserToken: function(id, req) {
 		const clientIp = req.connection.remoteAddress;
-		const { isMobile, isDesktop, browser, version, os, platform, source } = req.useragent;
-		let token = id + clientIp + isMobile + isDesktop + os + version + platform + source + browser;
+		const {
+			isMobile,
+			isDesktop,
+			browser,
+			version,
+			os,
+			platform,
+			source
+		} = req.useragent;
+		let token =
+			id +
+			clientIp +
+			isMobile +
+			isDesktop +
+			os +
+			version +
+			platform +
+			source +
+			browser;
 		return this.createHash(token);
 	},
 	ImageUrl(name, folder = 'uploads') {
