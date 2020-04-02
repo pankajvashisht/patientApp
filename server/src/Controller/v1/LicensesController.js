@@ -49,6 +49,10 @@ module.exports = {
 			limit: [offset, limit],
 			orderBy: ['id desc']
 		};
+		const lat_long = {
+			latitude: 0,
+			longitude: 0
+		};
 		if (postCode) {
 			const address = await axios.get(
 				`https://maps.googleapis.com/maps/api/geocode/json?components=geocode|postal_code:${postCode}&key=${config.GOOGLE_MAP_KEY}`
@@ -58,6 +62,8 @@ module.exports = {
 			} = address;
 			if (results.length === 0) throw new ApiError('Invaild Post code', 422);
 			const { lat, lng } = results[0].geometry.location;
+			lat_long.latitude = lat;
+			lat_long.longitude = lng;
 			condition.conditions['location'] = [
 				`round(( 6371 * acos( cos( radians(${lat}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${lng}) ) + sin( radians(${lat}) ) * sin(radians(latitude)) ) ),0) < 50`
 			];
@@ -72,7 +78,10 @@ module.exports = {
 		const result = await DB.find('agencies', 'all', condition);
 		return {
 			message: 'agencies list',
-			data: app.addUrl(result, 'image')
+			data: {
+				postcodeInfo: lat_long,
+				result: app.addUrl(result, 'image')
+			}
 		};
 	},
 	giveRating: async Request => {
