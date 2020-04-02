@@ -60,7 +60,7 @@ module.exports = {
 			const { lat, lng } = results[0].geometry.location;
 			condition.conditions[
 				'location'
-			] = `round(( 6371 * acos( cos( radians(${lat}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${lng}) ) + sin( radians(${lat}) ) * sin(radians(latitude)) ) ),0) < 50`;
+			] = `( 6371 * acos( cos( radians(${lat}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${lng}) ) + sin( radians(${lat}) ) * sin(radians(latitude)) ) ) < 50`;
 		}
 		if (search) {
 			condition.conditions[`like`] = {
