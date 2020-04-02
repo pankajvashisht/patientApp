@@ -40,13 +40,26 @@ class Query {
 				query += ' where ';
 				let its_first = 0;
 				for (let c in condition.conditions) {
-					console.log(c);
 					if (c === 'or') {
 						for (let a in condition.conditions[c]) {
 							if (its_first === 0) {
-								query += ' `' + table + '`.`' + a + "` = '" + condition.conditions[c][a] + "'";
+								query +=
+									' `' +
+									table +
+									'`.`' +
+									a +
+									"` = '" +
+									condition.conditions[c][a] +
+									"'";
 							} else {
-								query += ' or `' + table + '`.`' + a + "` = '" + condition.conditions[c][a] + "' ";
+								query +=
+									' or `' +
+									table +
+									'`.`' +
+									a +
+									"` = '" +
+									condition.conditions[c][a] +
+									"' ";
 							}
 							its_first++;
 						}
@@ -55,6 +68,13 @@ class Query {
 							query += ` FIND_IN_SET(${condition.conditions[c][0]}, ${condition.conditions[c][1]}) `;
 						} else {
 							query += ` and FIND_IN_SET(${condition.conditions[c][0]}, ${condition.conditions[c][1]}) `;
+						}
+						its_first++;
+					} else if (c === 'location') {
+						if (its_first === 0) {
+							query += ` ${condition.conditions[c][0]} `;
+						} else {
+							query += ` and ${condition.conditions[c][0]} `;
 						}
 						its_first++;
 					} else if (c === 'NotEqual') {
@@ -139,7 +159,7 @@ class Query {
 
 	async findall(query) {
 		query = String(query);
-		const [ row ] = await this.db.db_connect.query(query);
+		const [row] = await this.db.db_connect.query(query);
 		return row;
 	}
 
@@ -157,10 +177,10 @@ class Query {
 			});
 
 			return await result
-				.then((data) => {
+				.then(data => {
 					return data;
 				})
-				.catch((err) => {
+				.catch(err => {
 					throw err;
 				});
 		} catch (e) {
@@ -171,7 +191,7 @@ class Query {
 	async Query(query, type) {
 		try {
 			query = String(query);
-			const [ rows ] = await this.db.db_connect.query(query);
+			const [rows] = await this.db.db_connect.query(query);
 			if (rows) {
 				if (type === 'select') {
 					return rows;
@@ -198,13 +218,13 @@ class Query {
 		object.modified = Math.round(new Date().getTime() / 1000, 0);
 
 		let get_scheme = 'SHOW COLUMNS FROM ' + table_name;
-		let row = new Promise((R) => {
+		let row = new Promise(R => {
 			this.db.db_connect.query(String(get_scheme), function(error, result) {
 				if (error) throw error;
 				R(result);
 			});
 		});
-		row = await row.then((data) => {
+		row = await row.then(data => {
 			return data;
 		});
 
@@ -239,10 +259,10 @@ class Query {
 				});
 			});
 			return await result
-				.then((data) => {
+				.then(data => {
 					return data;
 				})
-				.catch((err) => {
+				.catch(err => {
 					throw err;
 				});
 		} catch (err) {

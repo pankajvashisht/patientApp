@@ -2,12 +2,13 @@ const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-const { lang } = require('../../../config');
+const { config } = require('../../../config');
+const axios = require('axios');
 let apis = new ApiController();
 let DB = new Db();
 
 module.exports = {
-	getLicense: async (Request) => {
+	getLicense: async Request => {
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
 		const search = Request.query.search || '';
@@ -16,8 +17,8 @@ module.exports = {
 			conditions: {
 				user_id: Request.body.user_id
 			},
-			limit: [ offset, limit ],
-			orderBy: [ 'id desc' ]
+			limit: [offset, limit],
+			orderBy: ['id desc']
 		};
 		if (search) {
 			condition.conditions[`like`] = {
@@ -31,10 +32,11 @@ module.exports = {
 			data: app.addUrl(result, 'licenses_image')
 		};
 	},
-	getAngency: async (Request) => {
+	getAngency: async Request => {
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
 		const search = Request.query.search || '';
+		const postCode = Request.query.postCode || false;
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
@@ -44,9 +46,22 @@ module.exports = {
 				'agencies.*',
 				'IFNULL(ROUND((select avg(rating) from ratings where agency_id=agencies.id),0),0) as rating'
 			],
-			limit: [ offset, limit ],
-			orderBy: [ 'id desc' ]
+			limit: [offset, limit],
+			orderBy: ['id desc']
 		};
+		if (postCode) {
+			const address = await axios.get(
+				`https://maps.googleapis.com/maps/api/geocode/json?components=geocode|postal_code:${postCode}&key=${config.GOOGLE_MAP_KEY}`
+			);
+			const {
+				data: { results = [] }
+			} = address;
+			if (results.length === 0) throw new ApiError('Invaild Post code', 422);
+			const { lat, lng } = results[0].geometry.location;
+			condition.conditions[
+				'location'
+			] = `round(( 6371 * acos( cos( radians(${lat}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${lng}) ) + sin( radians(${lat}) ) * sin(radians(latitude)) ) ),0) < 50`;
+		}
 		if (search) {
 			condition.conditions[`like`] = {
 				name: search,
@@ -60,7 +75,7 @@ module.exports = {
 			data: app.addUrl(result, 'image')
 		};
 	},
-	giveRating: async (Request) => {
+	giveRating: async Request => {
 		const required = {
 			user_id: Request.body.user_id,
 			rating: Request.body.rating,
@@ -83,7 +98,7 @@ module.exports = {
 			data: RequestData
 		};
 	},
-	getRating: async (Request) => {
+	getRating: async Request => {
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
 		const agency_id = Request.query.agency_id || 10;
@@ -92,7 +107,10 @@ module.exports = {
 			conditions: {
 				agency_id
 			},
-			join: [ 'users on (users.id = ratings.user_id)', 'agencies on (agencies.id = ratings.agency_id)' ],
+			join: [
+				'users on (users.id = ratings.user_id)',
+				'agencies on (agencies.id = ratings.agency_id)'
+			],
 			fields: [
 				'ratings.*',
 				'users.name as user_name',
@@ -103,16 +121,16 @@ module.exports = {
 				'agencies.name as agency_name',
 				'agencies.*'
 			],
-			limit: [ offset, limit ],
-			orderBy: [ 'ratings.id desc' ]
+			limit: [offset, limit],
+			orderBy: ['ratings.id desc']
 		};
 		const result = await DB.find('ratings', 'all', condition);
 		return {
 			message: 'rating list',
-			data: app.addUrl(result, [ 'image', 'profile' ])
+			data: app.addUrl(result, ['image', 'profile'])
 		};
 	},
-	addLicenses: async (Request) => {
+	addLicenses: async Request => {
 		const required = {
 			user_id: Request.body.user_id,
 			first_name: Request.body.first_name,
@@ -126,7 +144,9 @@ module.exports = {
 		};
 		const RequestData = await apis.vaildation(required, {});
 		if (Request.files && Request.files.licenses_image) {
-			RequestData.licenses_image = await app.upload_pic_with_await(Request.files.licenses_image);
+			RequestData.licenses_image = await app.upload_pic_with_await(
+				Request.files.licenses_image
+			);
 		}
 		RequestData.id = await DB.save('licenses', RequestData);
 		return {
@@ -134,7 +154,7 @@ module.exports = {
 			data: RequestData
 		};
 	},
-	deleteLicenses: async (Request) => {
+	deleteLicenses: async Request => {
 		const required = {
 			user_id: Request.body.user_id,
 			licenses_id: Request.body.licenses_id
@@ -153,7 +173,7 @@ module.exports = {
 			data: []
 		};
 	},
-	updateLicenses: async (Request) => {
+	updateLicenses: async Request => {
 		const required = {
 			licenses_id: Request.body.licenses_id
 		};
@@ -178,7 +198,9 @@ module.exports = {
 		});
 		if (!licenses_info) throw new ApiError('Invaild licenses id', 400);
 		if (Request.files && Request.files.licenses_image) {
-			RequestData.licenses_image = await app.upload_pic_with_await(Request.files.licenses_image);
+			RequestData.licenses_image = await app.upload_pic_with_await(
+				Request.files.licenses_image
+			);
 		}
 		RequestData.id = RequestData.licenses_id;
 		RequestData.id = await DB.save('licenses', RequestData);
