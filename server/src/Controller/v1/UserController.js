@@ -29,7 +29,7 @@ class UserController extends ApiController {
 			this.mails(RequestData);
 		}, 100);
 		return {
-			message: lang['en'].signup,
+			message: 'Iscriviti gratuitamente',
 			data: {
 				authorization_key: RequestData.authorization_key
 			}
@@ -51,7 +51,7 @@ class UserController extends ApiController {
 			usersInfo.profile = appURL + 'uploads/' + usersInfo.profile;
 		}
 		return {
-			message: lang[req.lang].verifyOtp,
+			message: 'OTP verificato',
 			data: usersInfo
 		};
 	}
@@ -116,7 +116,7 @@ class UserController extends ApiController {
 		});
 		if (login_details) {
 			if (request_data.password !== login_details.password)
-				throw new ApiError(lang[req.lang].wrongLogin);
+				throw new ApiError('Email o password non valida');
 			delete login_details.password;
 			request_data.id = login_details.id;
 			await DB.save('users', request_data);
@@ -135,7 +135,7 @@ class UserController extends ApiController {
 	async appInfo() {
 		let app_info = await DB.find('app_informations', 'all');
 		return {
-			message: 'App Informations',
+			message: 'Informazioni Applicazione',
 			data: app_info
 		};
 	}
@@ -152,7 +152,7 @@ class UserController extends ApiController {
 		loginInfo.password = request_data.new_password;
 		await DB.save('users', loginInfo);
 		return {
-			message: 'Password change Successfully',
+			message: 'Password aggiornata correttamente',
 			data: []
 		};
 	}
@@ -195,7 +195,7 @@ class UserController extends ApiController {
 		}
 
 		return {
-			message: 'Profile updated successfully',
+			message: 'Profilo aggiornato correttamente',
 			data: usersinfo
 		};
 	}
@@ -208,7 +208,7 @@ class UserController extends ApiController {
 		request_data.authorization_key = '';
 		await DB.save('users', request_data);
 		return {
-			message: 'User Logout successfully',
+			message: 'Logout eseguito',
 			data: []
 		};
 	}

@@ -28,7 +28,7 @@ module.exports = {
 		}
 		const result = await DB.find('licenses', 'all', condition);
 		return {
-			message: 'licenses list',
+			message: 'Lista patenti',
 			data: app.addUrl(result, 'licenses_image')
 		};
 	},
@@ -77,7 +77,7 @@ module.exports = {
 		}
 		const result = await DB.find('agencies', 'all', condition);
 		return {
-			message: 'agencies list',
+			message: 'Lista Agenzie',
 			data: {
 				postcodeInfo: lat_long,
 				result: app.addUrl(result, 'image')
@@ -93,17 +93,17 @@ module.exports = {
 		};
 		const RequestData = await apis.vaildation(required, {});
 		if (RequestData.rating > 5 || RequestData.rating < 1) {
-			throw new ApiError('Rating should be more then 1 or less then 5', 422);
+			throw new ApiError('Il punteggio deve essere compreso fra 1 e 5', 422);
 		}
 		const agency = await DB.find('agencies', 'first', {
 			conditions: {
 				id: RequestData.agency_id
 			}
 		});
-		if (!agency) throw new ApiError('Invaild Agency Id', 400);
+		if (!agency) throw new ApiError('Agenzia non valida', 400);
 		RequestData.id = await DB.save('ratings', RequestData);
 		return {
-			message: ' ratings add Successfully',
+			message: 'Recensione pubblicata correttamente',
 			data: RequestData
 		};
 	},
@@ -159,7 +159,7 @@ module.exports = {
 		}
 		RequestData.id = await DB.save('licenses', RequestData);
 		return {
-			message: ' licenses add Successfully',
+			message: 'Patente aggiunta',
 			data: RequestData
 		};
 	},
@@ -175,10 +175,10 @@ module.exports = {
 				id: RequestData.licenses_id
 			}
 		});
-		if (!licenses_info) throw new ApiError('Invaild licenses id', 400);
+		if (!licenses_info) throw new ApiError('Licenza non valida', 400);
 		DB.first(`delete from licenses where id = ${RequestData.licenses_id}`);
 		return {
-			message: ' licenses deleted Successfully',
+			message: 'Patente eliminata',
 			data: []
 		};
 	},
@@ -205,7 +205,7 @@ module.exports = {
 				id: RequestData.licenses_id
 			}
 		});
-		if (!licenses_info) throw new ApiError('Invaild licenses id', 400);
+		if (!licenses_info) throw new ApiError('Licenza non valida', 400);
 		if (Request.files && Request.files.licenses_image) {
 			RequestData.licenses_image = await app.upload_pic_with_await(
 				Request.files.licenses_image

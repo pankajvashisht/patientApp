@@ -14,11 +14,11 @@ const UserAuth = async (req, res, next) => {
 			return next();
 		}
 		if (!req.headers.hasOwnProperty('authorization_key')) {
-			throw { code: 400, message: 'authorization_key key is required' };
+			throw { code: 400, message: 'Chiave di autorizzazione richiesta' };
 		}
 		let user_details = await DB.find('users', 'first', {
 			conditions: {
-				authorization_key: req.headers.authorization_key,
+				authorization_key: req.headers.authorization_key
 			},
 			fields: [
 				'id',
@@ -39,7 +39,7 @@ const UserAuth = async (req, res, next) => {
 			next();
 			return;
 		}
-		throw { code: 401, message: 'Invaild Authorization' };
+		throw { code: 401, message: 'Autorizzazione non valida' };
 	} catch (err) {
 		return app.error(res, err);
 	}
