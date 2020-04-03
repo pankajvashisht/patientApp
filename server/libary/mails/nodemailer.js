@@ -40,7 +40,7 @@ class Mail {
 					const transporter = nodemailer.createTransport(this.oauth);
 					const mailOptions = {
 						to: this.to,
-						from: 'amministrazione@mypatente.it',
+						from: 'admin@mypatente.com',
 						subject: this.subject,
 						html: data
 					};
