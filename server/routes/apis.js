@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { UserController, LicensesController } = require('../src/Controller/v1/index');
+const {
+	UserController,
+	LicensesController,
+} = require('../src/Controller/v1/index');
 const { userSignup } = require('../src/Request');
 const { UserAuth, cross, Language } = require('../src/middleware/index');
 const Apiresponse = require('../libary/ApiResponse');
@@ -12,8 +15,8 @@ my_cron.start(() => {
 	user.sendPush();
 });
 
-router.use([ cross, Language, UserAuth ]);
-router.get('/', function(req, res) {
+router.use([cross, Language, UserAuth]);
+router.get('/', function (req, res) {
 	res.send(' APi workings ');
 });
 
@@ -25,7 +28,14 @@ router.post('/change_password', Apiresponse(user.changePassword));
 router.post('/forgot-password', Apiresponse(user.forgotPassword));
 router.post('/logout', Apiresponse(user.logout));
 router.get('/app-information', Apiresponse(user.appInfo));
-router.get('/agencie/:offset([0-9]+)?/', Apiresponse(LicensesController.getAngency));
+router.get(
+	'/agencie/:offset([0-9]+)?/',
+	Apiresponse(LicensesController.getAngency)
+);
+router.get(
+	'/angency-details/:angency_id([0+9]+)?/',
+	Apiresponse(LicensesController.angencyDetails)
+);
 router
 	.route('/licenses/:offset([0-9]+)?/')
 	.get(Apiresponse(LicensesController.getLicense))
