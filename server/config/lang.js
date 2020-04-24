@@ -10,8 +10,8 @@ module.exports = {
 		emailRegister: 'The Email is already registered. Kindly use another',
 		verifyOtp: 'Otp verify Successfully',
 		invaildOtp: 'Invaild Otp',
-		otpSend: 'Link send on your register email',
-		mailNotFound: 'Email not found',
+		otpSend: 'Link invia sulla tua email registrata',
+		mailNotFound: 'Email non trovata',
 		LoginMessage: 'User Login Successfully',
 		appInfo: 'App Informations',
 		oldPassword: 'Old password is wrong',
@@ -62,7 +62,7 @@ module.exports = {
 		NotificationListing: 'Notification listing',
 		bussinessCatgeory: 'Bussiness Catgegory Listing',
 		OTP:
-			'is your one time password to verify account on My Patient.It is vaild for 30 minutes.Do not share your OTP with anyone'
+			'is your one time password to verify account on My Patient.It is vaild for 30 minutes.Do not share your OTP with anyone',
 	},
 	es: {
 		wrongLogin: 'Correo o contraseña equivocada',
@@ -130,6 +130,6 @@ module.exports = {
 		NotificationListing: 'Listado de notificaciones',
 		bussinessCatgeory: 'Listado de categoría comercial',
 		OTP:
-			'es su contraseña de un solo uso para verificar la cuenta en ROU. Es valiosa durante 30 minutos. No comparta su OTP con nadie'
-	}
+			'es su contraseña de un solo uso para verificar la cuenta en ROU. Es valiosa durante 30 minutos. No comparta su OTP con nadie',
+	},
 };
