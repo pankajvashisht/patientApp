@@ -33,7 +33,7 @@ router.get(
 	Apiresponse(LicensesController.getAngency)
 );
 router.get(
-	'/angency-details/:angency_id([0+9]+)',
+	'/angency-details/:angency_id([0-9]+)',
 	Apiresponse(LicensesController.angencyDetails)
 );
 router
