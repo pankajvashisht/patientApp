@@ -17,8 +17,8 @@ class UserController extends ApiController {
 		const result = await DB.find('users', 'first', {
 			conditions: {
 				phone: RequestData.phone,
-				status: 0
-			}
+				status: 0,
+			},
 		});
 		if (result) {
 			RequestData.id = result.id;
@@ -31,13 +31,13 @@ class UserController extends ApiController {
 		return {
 			message: 'Iscriviti gratuitamente',
 			data: {
-				authorization_key: RequestData.authorization_key
-			}
+				authorization_key: RequestData.authorization_key,
+			},
 		};
 	}
 	async verifyOtp(req) {
 		let required = {
-			otp: req.body.otp
+			otp: req.body.otp,
 		};
 		let non_required = {};
 		let request_data = await super.vaildation(required, non_required);
@@ -52,22 +52,22 @@ class UserController extends ApiController {
 		}
 		return {
 			message: 'OTP verificato',
-			data: usersInfo
+			data: usersInfo,
 		};
 	}
 
 	async forgotPassword(req) {
 		let required = {
 			email: req.body.email,
-			otp: app.randomNumber()
+			otp: app.randomNumber(),
 		};
 		let non_required = {};
 		let request_data = await super.vaildation(required, non_required);
 		let user_info = await DB.find('users', 'first', {
 			conditions: {
-				email: request_data.email
+				email: request_data.email,
 			},
-			fields: ['id', 'email', 'name']
+			fields: ['id', 'email', 'name'],
 		});
 		if (!user_info) throw new ApiError(lang[req.lang].mailNotFound);
 		user_info.otp = request_data.otp;
@@ -80,28 +80,28 @@ class UserController extends ApiController {
 			data: {
 				first_name: user_info.name,
 				last_name: user_info.name,
-				url: appURL + 'users/change_password/' + user_info.forgot_password_hash
-			}
+				url: appURL + 'users/change_password/' + user_info.forgot_password_hash,
+			},
 		};
 		setTimeout(() => {
 			app.send_mail(mail);
 		}, 100);
 		return {
 			message: lang[req.lang].otpSend,
-			data: []
+			data: [],
 		};
 	}
 
 	async loginUser(req) {
 		const required = {
 			phone: req.body.phone,
-			password: req.body.password
+			password: req.body.password,
 		};
 		const non_required = {
 			device_type: req.body.device_type || 0,
 			device_token: req.body.device_token || '',
 			last_login: app.currentTime,
-			authorization_key: app.createToken()
+			authorization_key: app.createToken(),
 		};
 
 		let request_data = await super.vaildation(required, non_required);
@@ -109,10 +109,10 @@ class UserController extends ApiController {
 			conditions: {
 				or: {
 					email: request_data.phone,
-					phone: request_data.phone
-				}
+					phone: request_data.phone,
+				},
 			},
-			fields: ['id', 'password', 'status', 'email']
+			fields: ['id', 'password', 'status', 'email'],
 		});
 		if (login_details) {
 			if (request_data.password !== login_details.password)
@@ -127,7 +127,7 @@ class UserController extends ApiController {
 			}
 			return {
 				message: lang['en'].LoginMessage,
-				data: login_details
+				data: login_details,
 			};
 		}
 		throw new ApiError(lang['en'].wrongLogin);
@@ -136,13 +136,13 @@ class UserController extends ApiController {
 		let app_info = await DB.find('app_informations', 'all');
 		return {
 			message: 'Informazioni Applicazione',
-			data: app_info
+			data: app_info,
 		};
 	}
 	async changePassword(req) {
 		let required = {
 			old_password: req.body.old_password,
-			new_password: req.body.new_password
+			new_password: req.body.new_password,
 		};
 		let request_data = await super.vaildation(required, {});
 		const loginInfo = req.body.userInfo;
@@ -153,19 +153,19 @@ class UserController extends ApiController {
 		await DB.save('users', loginInfo);
 		return {
 			message: 'Password aggiornata correttamente',
-			data: []
+			data: [],
 		};
 	}
 	async updateProfile(req) {
 		const required = {
-			id: req.body.user_id
+			id: req.body.user_id,
 		};
 		const non_required = {
 			tax_code: req.body.tax_code,
 			email: req.body.email,
 			address: req.body.address,
 			name: req.body.name,
-			password: req.body.password
+			password: req.body.password,
 		};
 		const request_data = await super.vaildation(required, non_required);
 
@@ -174,7 +174,7 @@ class UserController extends ApiController {
 			const result = await DB.first(query);
 			if (result.length > 0) {
 				throw new ApiError(
-					'Email already register please add new email address',
+					'Email già registrata per favore aggiungi nuovo indirizzo email',
 					400
 				);
 			}
@@ -196,20 +196,20 @@ class UserController extends ApiController {
 
 		return {
 			message: 'Profilo aggiornato correttamente',
-			data: usersinfo
+			data: usersinfo,
 		};
 	}
 
 	async logout(req) {
 		let required = {
-			id: req.body.user_id
+			id: req.body.user_id,
 		};
 		let request_data = await super.vaildation(required, {});
 		request_data.authorization_key = '';
 		await DB.save('users', request_data);
 		return {
 			message: 'Logout eseguito',
-			data: []
+			data: [],
 		};
 	}
 	async sendPush() {
@@ -220,7 +220,7 @@ class UserController extends ApiController {
 		);
 		let right_time = currentTime * 1000;
 		console.log(new Date(right_time - 2629743000).toDateString());
-		result.forEach(value => {
+		result.forEach((value) => {
 			const thirty = new Date(right_time - 2629743000).toDateString();
 			const fiften_day = new Date(right_time - 86400000 * 15).toDateString();
 			const seven_day = new Date(right_time - 86400000 * 7).toDateString();
@@ -241,7 +241,7 @@ class UserController extends ApiController {
 		try {
 			app.sendSMS({
 				to: `${request_data.phone_code}${request_data.phone}`,
-				message: `${request_data.otp} ${lang[request_data.lang].OTP}`
+				message: `${request_data.otp} ${lang[request_data.lang].OTP}`,
 			});
 			return true;
 		} catch (error) {
@@ -252,18 +252,18 @@ class UserController extends ApiController {
 
 module.exports = UserController;
 
-const sendInfo = data => {
+const sendInfo = (data) => {
 	const message = `Your Driving Licence is about to Expire ,Please renew it.`;
 	try {
 		app.sendSMS({
 			to: `${data.phone_code}${data.phone}`,
-			message
+			message,
 		});
 		const pushObject = {
 			token: data.device_token,
 			message,
 			notification_code: 1,
-			body: []
+			body: [],
 		};
 		app.send_push(pushObject);
 		const mail = {
@@ -272,8 +272,8 @@ const sendInfo = data => {
 			template: 'licence',
 			data: {
 				first_name: data.name,
-				last_name: data.name
-			}
+				last_name: data.name,
+			},
 		};
 		app.send_mail(mail);
 		return true;
@@ -281,7 +281,7 @@ const sendInfo = data => {
 		//
 	}
 };
-const sendSignupMail = data => {
+const sendSignupMail = (data) => {
 	const mail = {
 		to: data.email,
 		subject: 'Account Details',
@@ -289,8 +289,8 @@ const sendSignupMail = data => {
 		data: {
 			name: data.name,
 			email: data.email,
-			password: data.password
-		}
+			password: data.password,
+		},
 	};
 	app.send_mail(mail);
 };
