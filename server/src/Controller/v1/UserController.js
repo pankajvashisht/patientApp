@@ -167,8 +167,10 @@ class UserController extends ApiController {
 			name: req.body.name,
 			password: req.body.password,
 		};
+		if (req.body.password) {
+			delete non_required.password;
+		}
 		const request_data = await super.vaildation(required, non_required);
-		console.log(request_data);
 		if (request_data.email) {
 			const query = `select email, id from users where email = '${request_data.email}' and id != ${request_data.id}`;
 			const result = await DB.first(query);
