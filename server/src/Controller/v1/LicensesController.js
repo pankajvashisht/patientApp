@@ -44,7 +44,7 @@ module.exports = {
 			},
 			fields: [
 				'agencies.*',
-				'IFNULL(ROUND((select avg(rating) from ratings where agency_id=agencies.id),0),0) as rating',
+				`IFNULL(ROUND((select avg(rating) from ratings where agency_id=agencies.id),0),0) as rating`,
 			],
 			limit: [offset, limit],
 			orderBy: ['id desc'],
@@ -92,7 +92,7 @@ module.exports = {
 			},
 			fields: [
 				'agencies.*',
-				'IFNULL(ROUND((select avg(rating) from ratings where agency_id=agencies.id),0),0) as rating',
+				`IFNULL(ROUND((select avg(rating) from ratings where agency_id=${angency_id}),0),0) as rating`,
 			],
 			orderBy: ['id desc'],
 		};
@@ -223,6 +223,8 @@ module.exports = {
 			place_birth: Request.body.place_birth,
 			release_date: Request.body.release_date,
 			license_number: Request.body.license_number,
+			vechile_class: Request.body.vechile_class,
+			release_authority: Request.body.release_authority,
 			expiry_date: Request.body.expiry_date, // should be int
 			status: 1,
 		};
