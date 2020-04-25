@@ -167,6 +167,7 @@ class UserController extends ApiController {
 			name: req.body.name,
 			password: req.body.password,
 		};
+		console.log(non_required);
 		if (req.body.password) {
 			delete non_required.password;
 		}
