@@ -167,8 +167,7 @@ class UserController extends ApiController {
 			name: req.body.name,
 			password: req.body.password,
 		};
-		console.log(non_required);
-		if (req.body.password) {
+		if (!req.body.password) {
 			delete non_required.password;
 		}
 		const request_data = await super.vaildation(required, non_required);
