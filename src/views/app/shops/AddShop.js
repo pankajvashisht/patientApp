@@ -27,6 +27,7 @@ const AddShop = React.memo(() => {
 		}
 	};
 	const location = async (place) => {
+		console.log(place);
 		dispatch({ key: 'address', value: place.formatted_address });
 		dispatch({ key: 'latitude', value: place.latitude });
 		dispatch({ key: 'longitude', value: place.longitude });
@@ -143,9 +144,73 @@ const AddShop = React.memo(() => {
 
 									<Colxx sm={6}>
 										<FormGroup>
+											<Label for='examplePasswordGrid'>Street</Label>
+											<Input
+												type='text'
+												required={true}
+												value={shopForm.street_no}
+												onChange={({ target }) =>
+													handleInput('street_no', target.value)
+												}
+												name='street_no'
+												placeholder='Street'
+											/>
+										</FormGroup>
+									</Colxx>
+
+									<Colxx sm={6}>
+										<FormGroup>
+											<Label for='examplePasswordGrid'>City</Label>
+											<Input
+												type='text'
+												required={true}
+												value={shopForm.city}
+												onChange={({ target }) =>
+													handleInput('city', target.value)
+												}
+												name='city'
+												placeholder='City'
+											/>
+										</FormGroup>
+									</Colxx>
+
+									<Colxx sm={6}>
+										<FormGroup>
+											<Label for='examplePasswordGrid'>Post code</Label>
+											<Input
+												type='text'
+												required={true}
+												value={shopForm.post_code}
+												onChange={({ target }) =>
+													handleInput('post_code', target.value)
+												}
+												name='post_code'
+												placeholder='Post Code'
+											/>
+										</FormGroup>
+									</Colxx>
+
+									<Colxx sm={6}>
+										<FormGroup>
+											<Label for='examplePasswordGrid'>Country</Label>
+											<Input
+												type='text'
+												required={true}
+												value={shopForm.country}
+												onChange={({ target }) =>
+													handleInput('country', target.value)
+												}
+												name='country'
+												placeholder='Country'
+											/>
+										</FormGroup>
+									</Colxx>
+									<Colxx sm={6}>
+										<FormGroup>
 											<Label for='examplePasswordGrid'>Profile</Label>
 											<Input
 												type='file'
+												className='form-control'
 												required={true}
 												onChange={({ target }) =>
 													handleInput('profile', target.files[0])
