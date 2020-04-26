@@ -27,7 +27,6 @@ const AddShop = React.memo(() => {
 		}
 	};
 	const location = async (place) => {
-		console.log(place);
 		dispatch({ key: 'address', value: place.formatted_address });
 		dispatch({ key: 'latitude', value: place.latitude });
 		dispatch({ key: 'longitude', value: place.longitude });
