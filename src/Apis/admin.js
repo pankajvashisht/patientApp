@@ -1,9 +1,9 @@
 import axios from '../utils/handleAxios';
-import { geocodeByAddress, getLatLng } from "react-google-places-autocomplete";
+import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
 export const Adminlogin = ({ email, password }) => {
 	return axios.post(`/login`, {
 		email,
-		password
+		password,
 	});
 };
 
@@ -50,6 +50,10 @@ export const addAgency = (data) => {
 	form.append('phone', data.phone);
 	form.append('image', data.profile);
 	form.append('email', data.email);
+	form.append('street_no', data.street_no);
+	form.append('post_code', data.post_code);
+	form.append('city', data.city);
+	form.append('country', data.country);
 	return axios.post(`/agency`, form);
 };
 
@@ -65,19 +69,20 @@ export const updateProfile = (data) => {
 	return axios.post(`/admin-profile`, form);
 };
 
-export const getLatLong = async location => { 
-	const[geocode] = await geocodeByAddress(location);
-  const latLng = await getLatLng(geocode);
-  return {
-    ...latLng,
-  };
-}
+export const getLatLong = async (location) => {
+	const [geocode] = await geocodeByAddress(location);
+	const latLng = await getLatLng(geocode);
+	return {
+		...latLng,
+		geocode,
+	};
+};
 
 export const updateUser = (data) => {
 	return axios.put(`/users?`, {
 		table: data.table,
 		id: data.id,
-		status: data.status
+		status: data.status,
 	});
 };
 
@@ -87,8 +92,8 @@ export const deleteUser = (data) => {
 		{ data },
 		{
 			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			}
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
 		}
 	);
 };

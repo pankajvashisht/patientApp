@@ -10,7 +10,7 @@ export const defaultLocale = 'en';
 export const localeOptions = [
 	{ id: 'en', name: 'English - LTR', direction: 'ltr' },
 	{ id: 'es', name: 'Español', direction: 'ltr' },
-	{ id: 'enrtl', name: 'English - RTL', direction: 'rtl' }
+	{ id: 'enrtl', name: 'English - RTL', direction: 'rtl' },
 ];
 
 export const firebaseConfig = {
@@ -19,7 +19,7 @@ export const firebaseConfig = {
 	databaseURL: 'https://gogo-react-login.firebaseio.com',
 	projectId: 'gogo-react-login',
 	storageBucket: 'gogo-react-login.appspot.com',
-	messagingSenderId: '216495999563'
+	messagingSenderId: '216495999563',
 };
 export const infoKey = 'LoginUser';
 export const searchPath = '/app/pages/search';
@@ -27,7 +27,7 @@ export const servicePath = 'https://api.coloredstrategies.com';
 export const apiUrl = () => {
 	const { location } = window;
 	if (location.hostname === 'localhost') {
-		return `http://localhost:3000/admins`;
+		return `http://3.137.56.42/admins`;
 	} else {
 		return `${location.origin}/admins`;
 	}

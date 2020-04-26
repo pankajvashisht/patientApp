@@ -1,10 +1,15 @@
 export const quillModules = {
 	toolbar: [
-		[ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
-		[ { list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' } ],
-		[ 'link', 'image' ],
-		[ 'clean' ]
-	]
+		['bold', 'italic', 'underline', 'strike', 'blockquote'],
+		[
+			{ list: 'ordered' },
+			{ list: 'bullet' },
+			{ indent: '-1' },
+			{ indent: '+1' },
+		],
+		['link', 'image'],
+		['clean'],
+	],
 };
 
 export const initialState = {
@@ -15,6 +20,10 @@ export const initialState = {
 	phone: '',
 	profile: '',
 	email: '',
+	street_no: '',
+	city: '',
+	post_code: '',
+	country: '',
 };
 
 export const quillFormats = [
@@ -28,5 +37,5 @@ export const quillFormats = [
 	'bullet',
 	'indent',
 	'link',
-	'image'
+	'image',
 ];
