@@ -119,6 +119,7 @@ class UserController extends ApiController {
 				throw new ApiError('Email o password non valida');
 			delete login_details.password;
 			request_data.id = login_details.id;
+			delete request_data.phone;
 			await DB.save('users', request_data);
 			login_details.authorization_key = request_data.authorization_key;
 			login_details = await super.userDetails(login_details.id);
