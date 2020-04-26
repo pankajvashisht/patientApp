@@ -80,7 +80,7 @@ class UserController extends ApiController {
 			data: {
 				first_name: user_info.name,
 				last_name: user_info.name,
-				url: appURL + 'users/change_password/' + user_info.forgot_password_hash,
+				url: `${appURL}users/change_password/${user_info.forgot_password_hash}`,
 			},
 		};
 		setTimeout(() => {
