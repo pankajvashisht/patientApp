@@ -87,9 +87,7 @@ const GoogleAutoComplete = ({ update, onChange, ...props }) => {
 	const initGoogle = () => {
 		const { google } = window;
 		const autocompleteField = currentRef.current;
-		autocomplete = new google.maps.places.Autocomplete(autocompleteField, {
-			componentRestrictions: { country: 'uk' },
-		});
+		autocomplete = new google.maps.places.Autocomplete(autocompleteField);
 		googleListner = google.maps.event.addListener(
 			autocomplete,
 			'place_changed',

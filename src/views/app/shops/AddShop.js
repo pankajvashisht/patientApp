@@ -12,8 +12,7 @@ import {
 	Form,
 } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
-import { addAgency, getLatLong } from '../../../Apis/admin';
-import Autocomplete from 'react-google-autocomplete';
+import { addAgency } from '../../../Apis/admin';
 import { initialState } from './Constants';
 import { NotificationManager } from '../../../components/common/react-notifications';
 import GoogleAutoComplete from '../../../components/GoogleAutoComplete';
