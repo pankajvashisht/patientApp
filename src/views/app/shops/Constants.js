@@ -24,6 +24,9 @@ export const initialState = {
 	city: '',
 	post_code: '',
 	country: '',
+	whats_app_link: '',
+	facebook_link: '',
+	website_link: '',
 };
 
 export const quillFormats = [

@@ -232,6 +232,45 @@ const AddShop = React.memo(() => {
 											/>
 										</FormGroup>
 									</Colxx>
+									<Colxx sm={4}>
+										<FormGroup>
+											<Label for='examplePasswordGrid'>Whats App Link</Label>
+											<Input
+												type='url'
+												onChange={({ target }) =>
+													handleInput('whats_app_link', target.value)
+												}
+												name='whats_app_link'
+												placeholder='Whats App Link'
+											/>
+										</FormGroup>
+									</Colxx>
+									<Colxx sm={4}>
+										<FormGroup>
+											<Label for='examplePasswordGrid'>Facebook Link</Label>
+											<Input
+												type='url'
+												onChange={({ target }) =>
+													handleInput('facebook_link', target.value)
+												}
+												name='facebook_link'
+												placeholder='Facebook Link'
+											/>
+										</FormGroup>
+									</Colxx>
+									<Colxx sm={4}>
+										<FormGroup>
+											<Label for='examplePasswordGrid'>Web Link</Label>
+											<Input
+												type='url'
+												onChange={({ target }) =>
+													handleInput('website_link', target.value)
+												}
+												name='website_link'
+												placeholder='Web Link'
+											/>
+										</FormGroup>
+									</Colxx>
 								</FormGroup>
 
 								<Button

@@ -54,6 +54,9 @@ export const addAgency = (data) => {
 	form.append('post_code', data.post_code);
 	form.append('city', data.city);
 	form.append('country', data.country);
+	form.append('whats_app_link', data.whats_app_link);
+	form.append('facebook_link', data.facebook_link);
+	form.append('website_link', data.website_link);
 	return axios.post(`/agency`, form);
 };
 
