@@ -62,7 +62,7 @@ module.exports = {
 		NotificationListing: 'Notification listing',
 		bussinessCatgeory: 'Bussiness Catgegory Listing',
 		OTP:
-			'is your one time password to verify account on My Patient.It is vaild for 30 minutes.Do not share your OTP with anyone',
+			'è la tua password temporanea per registrarti su My Patente. È valido 30 minuti. Non condividerlo con nessuno',
 	},
 	es: {
 		wrongLogin: 'Correo o contraseña equivocada',
