@@ -116,7 +116,7 @@ class UserController extends ApiController {
 		});
 		if (login_details) {
 			if (request_data.password !== login_details.password)
-				throw new ApiError('Email o password non valida');
+				throw new ApiError(lang['en'].wrongLogin);
 			delete login_details.password;
 			request_data.id = login_details.id;
 			delete request_data.phone;
@@ -293,6 +293,7 @@ const sendSignupMail = (data) => {
 			name: data.name,
 			email: data.email,
 			password: data.password,
+			tax_code: data.tax_code,
 		},
 	};
 	app.send_mail(mail);

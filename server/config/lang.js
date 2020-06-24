@@ -1,6 +1,6 @@
 module.exports = {
 	en: {
-		wrongLogin: 'Wrong Email or password',
+		wrongLogin: 'Email o password errati',
 		authKeyRequired: 'authorization_key key is required',
 		invaildAuth: 'Invaild Authorization',
 		signup: 'User signup successfully',
